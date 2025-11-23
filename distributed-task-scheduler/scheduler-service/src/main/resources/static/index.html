@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Scheduler Dashboard</title></head>
+<body>
+<h2>Distributed Task Scheduler - Dashboard</h2>
+<form id="form">
+  Payload: <input id="payload" value="do-something"/>&nbsp;
+  Delay(s): <input id="delay" value="2" size="3"/>&nbsp;
+  <button type="submit">Submit Task</button>
+</form>
+<div id="result"></div>
+<h3>Tasks</h3>
+<pre id="tasks"></pre>
+<script>
+async function submit(e){e.preventDefault();const p=document.getElementById('payload').value;const d=parseInt(document.getElementById('delay').value);const res=await fetch('/api/v1/tasks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload:p,delaySeconds:d})});const j=await res.json();document.getElementById('result').innerText=JSON.stringify(j);loadTasks();}
+async function loadTasks(){const res=await fetch('/api/v1/tasks');const j=await res.json();document.getElementById('tasks').innerText=JSON.stringify(j,null,2);}
+document.getElementById('form').addEventListener('submit',submit);
+setInterval(loadTasks,3000);
+loadTasks();
+</script>
+</body>
+</html>
